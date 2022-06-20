@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    restart: always
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  mpesa:
+    container_name: mpesa_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/api
+    links:
+      - db:db
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+volumes:
+  db:
+    driver: local
