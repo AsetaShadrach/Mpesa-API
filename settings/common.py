@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django_seed',
     'rest_framework_swagger',
     'drf_yasg',
+    'oauth2_provider',
     # MY APPS
     'entities.apps.EntitiesConfig',
 ]
@@ -119,6 +120,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+OAUTH2_PROVIDER = {
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

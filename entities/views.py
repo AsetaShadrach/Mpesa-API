@@ -7,7 +7,7 @@ from .serializers import (  ServiceAppsSerializer,
                             SendMoneySerializer
                         )
 from .models import ServiceApps, Transaction
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
@@ -15,12 +15,18 @@ from rest_framework.response import Response
 import rest_framework.status as REST_HTTP_STATUS
 from backend.ClientToBusiness.express import MpesaExpressBackend
 from backend.logging.log_config import make_logger
+from oauth2_provider.contrib.rest_framework import (
+    TokenHasReadWriteScope
+)
 
+# TODO complete all View sketches
 
-class ServiceAppssList(generics.ListAPIView):
-    queryset = ServiceApps.objects.all()
+class ServiceAppsList(generics.ListAPIView):
     serializer_class = ServiceAppsSerializer
-    
+    def get():
+        queryset = ServiceApps.objects.all()
+        return queryset
+
 
 class TransactionsList(generics.ListAPIView):
     queryset = Transaction.objects.all()
@@ -28,8 +34,10 @@ class TransactionsList(generics.ListAPIView):
 
 
 class ServiceAppsDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ServiceApps.objects.all()
     serializer_class = ServiceAppsSerializer
+    def get(app_id):
+        service_app = ServiceApps.objects.filter(app_id = app_id).first()
+        return service_app
 
 
 class TransactionDetail(generics.RetrieveUpdateAPIView):
@@ -43,6 +51,9 @@ class MpesaCallbackUrl(APIView):
 
 
 class MpesaExpress(GenericAPIView, APIView):
+    #permission_classes = [  permissions.IsAuthenticated,
+     #                       TokenHasReadWriteScope
+      #                  ]
     serializer_class = SendMoneySerializer
     def post(self, request):
         try:
@@ -64,7 +75,7 @@ class MpesaExpress(GenericAPIView, APIView):
             return JsonResponse({"status":response.status_code} , 
                     status=REST_HTTP_STATUS.HTTP_200_OK)
         except Exception as e:
-            print(str(e))
+            logging.error(str(e))
             return JsonResponse({"status":response.status_code} , 
                     status=REST_HTTP_STATUS.HTTP_200_OK)
 
