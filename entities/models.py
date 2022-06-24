@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
-class Application(models.Model):
+class ServiceApps(models.Model):
     class Active(models.IntegerChoices):
         NO = 0, _('No')
         YES = 1, _('Yes')
@@ -15,8 +15,8 @@ class Application(models.Model):
     change_description = models.CharField(max_length=150)
 
     class Meta:
-        db_table = 'applications'
-        verbose_name_plural = 'applications'
+        db_table = 'service_apps'
+        verbose_name_plural = 'service_apps'
         ordering = ['-updated_at']
 
     
@@ -35,10 +35,17 @@ class Transaction(models.Model):
         PENDING_INT = 'PTI', _('PendingInternal')
         PENDING_EXT = 'PTE', _('PendingExternal')
         NA = 'NA', _('NotAvailable')
-    
+
+    class TransactionType(models.TextChoices):
+        AIRTIME = 'AIRTIME'
+        SEND_MONEY = 'SEND_MONEY'
+        BUY_GOODS = 'BUY_GOODS'
+        PAYBILL = 'PAYBILL'
+
 
     transaction_id = models.CharField(max_length=50,primary_key=True)
-    app_id = models.ForeignKey(Application, on_delete=models.CASCADE)
+    app_id = models.ForeignKey(ServiceApps, on_delete=models.PROTECT)
+    transaction_type = models.CharField(max_length=30, choices=TransactionType.choices)
     status = models.CharField(max_length=30, choices= TransactionStatus.choices)
     response_code = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)

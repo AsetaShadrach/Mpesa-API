@@ -2,11 +2,11 @@ import requests
 import logging
 from decouple import config
 from django.http import JsonResponse
-from .serializers import (  ApplicationSerializer, 
+from .serializers import (  ServiceAppsSerializer, 
                             TransactionSerializer,
                             SendMoneySerializer
                         )
-from .models import Application, Transaction
+from .models import ServiceApps, Transaction
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
@@ -17,9 +17,9 @@ from backend.ClientToBusiness.express import MpesaExpressBackend
 from backend.logging.log_config import make_logger
 
 
-class ApplicationsList(generics.ListAPIView):
-    queryset = Application.objects.all()
-    serializer_class = ApplicationSerializer
+class ServiceAppssList(generics.ListAPIView):
+    queryset = ServiceApps.objects.all()
+    serializer_class = ServiceAppsSerializer
     
 
 class TransactionsList(generics.ListAPIView):
@@ -27,9 +27,9 @@ class TransactionsList(generics.ListAPIView):
     serializer_class = TransactionSerializer
 
 
-class ApplicationDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Application.objects.all()
-    serializer_class = ApplicationSerializer
+class ServiceAppsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServiceApps.objects.all()
+    serializer_class = ServiceAppsSerializer
 
 
 class TransactionDetail(generics.RetrieveUpdateAPIView):
@@ -54,7 +54,7 @@ class MpesaExpress(GenericAPIView, APIView):
             bearer_token = 'Bearer ' + access_token
 
             headers = {
-            'Content-Type': 'application/json',
+            'Content-Type': 'ServiceApps/json',
             'Authorization': bearer_token
             }
 

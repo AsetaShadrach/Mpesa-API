@@ -1,9 +1,9 @@
-from .models import Application,Transaction
+from .models import ServiceApps,Transaction
 from rest_framework import serializers
 
-class ApplicationSerializer(serializers.ModelSerializer):
+class ServiceAppsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Application
+        model = ServiceApps
         fields = ('app_id','creator','active','created_at','updated_at','change_description')
 
 

@@ -1,6 +1,6 @@
 from distutils.command.config import config
 from django_seed import Seed
-from apps.entities.models import Transaction,User,Application
+from src.entities.models import Transaction,User,Application
 from decouple import config
 
 DEBUG = config('DEBUG')
