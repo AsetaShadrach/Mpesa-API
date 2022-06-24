@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     # MY APPS
     'entities.apps.EntitiesConfig',
-    
 ]
 
 MIDDLEWARE = [

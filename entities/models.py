@@ -3,13 +3,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 class ServiceApps(models.Model):
-    class Active(models.IntegerChoices):
-        NO = 0, _('No')
-        YES = 1, _('Yes')
-
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     app_id = models.CharField(max_length=50, primary_key=True)
-    active = models.IntegerField(choices= Active.choices)
+    active = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     change_description = models.CharField(max_length=150)
@@ -47,7 +43,7 @@ class Transaction(models.Model):
     app_id = models.ForeignKey(ServiceApps, on_delete=models.PROTECT)
     transaction_type = models.CharField(max_length=30, choices=TransactionType.choices)
     status = models.CharField(max_length=30, choices= TransactionStatus.choices)
-    response_code = models.IntegerField()
+    response_code = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
