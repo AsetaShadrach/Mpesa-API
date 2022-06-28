@@ -25,13 +25,15 @@ SECRET_KEY = config('SECRET_KEY')
 
 # Application definition
 
-INSTALLED_APPS = [
+DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+THIRD_PARTY_APPS = [
     # DEPENDENCIES
     'corsheaders',
     'rest_framework',
@@ -39,9 +41,15 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_yasg',
     'oauth2_provider',
+ ]
+
+CUSTOM_APPS = [
     # MY APPS
-    'entities.apps.EntitiesConfig',
+    'service_apps.apps.ServiceAppsConfig',
+    'service_transactions.apps.ServiceTransactionsConfig',
 ]
+
+INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     'silk.middleware.SilkyMiddleware',
@@ -124,11 +132,11 @@ OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     )
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

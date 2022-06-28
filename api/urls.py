@@ -41,10 +41,13 @@ urlpatterns = [
     # API docs
     path('swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path("api/", include("entities.urls")),
+    #path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('api/services/', include('service_apps.urls')),
+    path('api/transactions/', include('service_transactions.urls')),
+    path('api/operations/', include('op_users.urls')),
 ]
 
 
-if config("DEBUG"):
+if config('DEBUG'):
     # silk profiler
-    urlpatterns.append( path("silk/", include("silk.urls")),)
+    urlpatterns.append( path('silk/', include('silk.urls')),)
