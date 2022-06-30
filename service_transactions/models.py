@@ -1,5 +1,5 @@
 from django.db import models
-from service_apps.models import ServiceApps
+from service_apps.models import ServiceApp
 
 
 class Transaction(models.Model):
@@ -18,7 +18,7 @@ class Transaction(models.Model):
 
 
     transaction_id = models.CharField(max_length=50,primary_key=True)
-    app_id = models.ForeignKey(ServiceApps, to_field="app_id" , on_delete=models.PROTECT)
+    app_id = models.ForeignKey(ServiceApp, to_field="app_id" , on_delete=models.PROTECT)
     transaction_type = models.CharField(max_length=30, choices=TransactionType.choices)
     status = models.CharField(max_length=30, choices= TransactionStatus.choices)
     response_code = models.IntegerField(null=True)

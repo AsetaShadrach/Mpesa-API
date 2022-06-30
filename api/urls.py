@@ -20,8 +20,6 @@ from rest_framework import permissions
 from drf_yasg import openapi
 from decouple import config
 
-from settings.development import DEBUG
-
 schema_view = get_schema_view(
    openapi.Info(
       title="MPESA API",

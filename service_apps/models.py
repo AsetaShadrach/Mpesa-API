@@ -1,17 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
+from collections import OrderedDict
+import uuid
 
-class ServiceApps(models.Model):
-    creator = models.CharField(max_length=50, null=True )
-    app_id = models.CharField(max_length=50, primary_key=True)
-    app_name = models.CharField(max_length=50, null=True)
+class ServiceApp(models.Model):
+    creator = models.CharField(max_length=50, default="Not Given" )
+    app_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    app_name = models.CharField(max_length=50, unique=True, blank=False)
     active = models.BooleanField(default=False)
-    # The Json file should have
-    # - current daily figures 
-    # - progressive monthly figures
-    # -- Note : the default for JSONField must be a callable
-    service_details = models.JSONField(default=dict)
     # tr -> transaction
     # l --> last
     # d --> day(s)
@@ -23,7 +18,10 @@ class ServiceApps(models.Model):
     tr_cum_sum_l_30d = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    change_description = models.CharField(max_length=150, null=True)
+    # The Json file should have
+    # - progressive monthly figures
+    # -- Note : the default for JSONField must be a callable
+    service_details = models.JSONField(default=OrderedDict)
 
     class Meta:
         db_table = 'service_apps'

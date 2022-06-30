@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import  ServiceApps
+from .models import  ServiceApp
 
-admin.site.register(ServiceApps)
+admin.site.register(ServiceApp)

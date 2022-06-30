@@ -1,5 +1,5 @@
 from django.test import TestCase
-from service_apps.models import ServiceApps
+from service_apps.models import ServiceApp
 from service_transactions.models import Transaction
 from django.contrib.auth.models import User
 
@@ -7,8 +7,8 @@ class TestModels(TestCase):
     def setUp(self) -> None:
         User.objects.create(username="test_user",email="test_user@gmail.com")
         test_user = User.objects.first()
-        ServiceApps.objects.create(creator = test_user,app_id="1234", active = True, change_description = "Created")
-        test_service = ServiceApps.objects.first()
+        ServiceApp.objects.create(creator = test_user.username,app_id="1234", active = True)
+        test_service = ServiceApp.objects.first()
         Transaction.objects.create(transaction_id = "TR11", app_id=test_service, transaction_type="AIRTIME")
         Transaction.objects.create(transaction_id = "TR12", app_id=test_service, transaction_type="PAYBILL")
         Transaction.objects.create(transaction_id = "TR13", app_id=test_service, transaction_type="BUY_GOODS")

@@ -33,15 +33,6 @@ DEFAULT_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-THIRD_PARTY_APPS = [
-    # DEPENDENCIES
-    'corsheaders',
-    'rest_framework',
-    'django_seed',
-    'rest_framework_swagger',
-    'drf_yasg',
-    'oauth2_provider',
- ]
 
 CUSTOM_APPS = [
     # MY APPS
@@ -49,7 +40,7 @@ CUSTOM_APPS = [
     'service_transactions.apps.ServiceTransactionsConfig',
 ]
 
-INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
+INSTALLED_APPS = DEFAULT_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     'silk.middleware.SilkyMiddleware',

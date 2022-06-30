@@ -6,8 +6,13 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from backend.seeding.seeder import SeedData
 import rest_framework.status as REST_HTTP_STATUS
+from .serializers import SeederSerializer
+from django.contrib.auth.models import User
 
-class Generator(APIView):
+class SeedDataGenerator(APIView):
+    def get_serializer(*args, **kwargs):
+        return SeederSerializer(*args, **kwargs)
+
     def post(self, request):
         response = {}
         try:
@@ -15,7 +20,9 @@ class Generator(APIView):
             app_no = request_data["no_of_apps"]
             tr_no = request_data["no_of_transactions"]
             seeder  = SeedData(app_no, tr_no)
-
+            
+            if not User.objects.filter(username='testuser').first():
+                seeder.create_user()
             if app_no > 0:
                 seeder.create_apps()
             if tr_no > 0 :
