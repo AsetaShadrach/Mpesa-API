@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import SeedDataGenerator
+from . import views
 
 urlpatterns = [ 
-    path("seed/", SeedDataGenerator.as_view(), name="seed-apps-and-transactions")
+    path("seed/data/", views.SeedDataGenerator.as_view(), name="seed_apps_and_transactions"),
+    path("user/create/", views.CreateUser.as_view(), name= "create_user"),
+    path("user/list", views.GetAllUsers.as_view(), name= "list_users")
 ]

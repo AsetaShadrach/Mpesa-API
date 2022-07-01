@@ -20,7 +20,7 @@ class ServiceAppList(generics.ListAPIView):
             queryset = ServiceApp.objects.all()
             for service in queryset:
                 response[service.app_name] = {
-                    "app_id" : service.app_id,
+                    "app_name" : service.app_name,
                     "active" : service.active,
                     "created_at" : service.created_at,
                     "updated_at" : service.updated_at,
@@ -44,9 +44,8 @@ class ServiceAppDetails(generics.RetrieveUpdateDestroyAPIView):
             service_app = ServiceApp.objects.filter(app_name = app_name).first()
             if service_app:
                 response ={
-                    "app_id" : service_app.app_id,
+                    "app_id":service_app.app_id,
                     "active" : service_app.active,
-                    "service_details" : service_app.service_details,
                     "tr_count_l_d" : service_app.tr_count_l_d,
                     "tr_count_l_7d" : service_app.tr_count_l_7d,
                     "tr_count_l_30d" : service_app.tr_count_l_30d,
@@ -55,6 +54,7 @@ class ServiceAppDetails(generics.RetrieveUpdateDestroyAPIView):
                     "tr_cum_sum_l_30d" : service_app.tr_cum_sum_l_30d,
                     "created_at " : service_app.created_at ,
                     "updated_at" : service_app.updated_at,
+                    "service_details" : service_app.service_details,
                 }
                 status = REST_HTTP_STATUS.HTTP_200_OK
             else:
@@ -77,18 +77,19 @@ class UpdateServiceDetails(APIView):
         change_description = ''
         try:
             request_data = request.data
-            app_id = request_data["app_id"]
-            service = ServiceApp.objects.filter(app_id=app_id)
+            app_name = request_data["app_name"]
+            service = ServiceApp.objects.filter(app_name=app_name).first()
+            
             if request_data.get("app_name"):
                 new_app_name = request_data.get("app_name")
                 service.update(app_name = new_app_name)
-                message = f"Changed app_name of app_id:{app_id} to {new_app_name}. "
+                message = f"Changed app_name of {app_name} to {new_app_name}. "
                 change_description = change_description + message
 
             if request_data.get("active"): 
                 active = request_data.get("active")
                 service.update(active = active)
-                message = f"Changed app active status of app_id:{app_id} to {str(active)}. "
+                message = f"Changed app active status of {app_name} to {str(active)}. "
                 change_description = change_description + message
             
             logging.info(change_description)
