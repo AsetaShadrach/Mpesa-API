@@ -17,9 +17,6 @@ class SeedData():
     def __init__(self, app_number, total_transactions) -> None:
         self.app_number = app_number
         self.total_transactions = total_transactions
-    
-    def create_user(self):
-        User(username='testuser', email='testuser@outlook.com', password='').save()
 
     def create_dummy_details(self):
         months = [calendar.month_name[i].lower() for i in range(1,13)]
@@ -42,12 +39,11 @@ class SeedData():
         self.APP_METADATA = json.loads(json.dumps(service_history))
 
 
-    def create_apps(self):
-        user  =  User.objects.all().first()
+    def create_apps(self,username):
         app_count = ServiceApp.objects.all().count()
         self.create_dummy_details()
         for i in range(0,self.app_number):
-            app = ServiceApp( creator = str(user.username),
+            app = ServiceApp( creator = username,
                         app_id = uuid.uuid4(),
                         app_name = "app" + str(i+app_count+1),
                         active = False,

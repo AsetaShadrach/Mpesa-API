@@ -77,30 +77,33 @@ class UpdateServiceDetails(APIView):
         change_description = ''
         try:
             request_data = request.data
-            app_name = request_data["app_name"]
-            service = ServiceApp.objects.filter(app_name=app_name).first()
-            
-            if request_data.get("app_name"):
-                new_app_name = request_data.get("app_name")
-                service.update(app_name = new_app_name)
-                message = f"Changed app_name of {app_name} to {new_app_name}. "
-                change_description = change_description + message
+            app_id = request_data["app_id"]
+            service = ServiceApp.objects.filter(app_id=app_id)
+            if len(service) > 0:
+                if request_data.get("app_name"):
+                    new_app_name = request_data.get("app_name")
+                    service.update(app_name = new_app_name)
+                    message = f"Changed app_name of app_id:{app_id} to {new_app_name}. "
+                    change_description = change_description + message
 
-            if request_data.get("active"): 
-                active = request_data.get("active")
-                service.update(active = active)
-                message = f"Changed app active status of {app_name} to {str(active)}. "
-                change_description = change_description + message
-            
-            logging.info(change_description)
+                if request_data.get("active"): 
+                    active = request_data.get("active")
+                    service.update(active = active)
+                    message = f"Changed app active status of app_id:{app_id} to {str(active)}. "
+                    change_description = change_description + message
+                
+                logging.info(change_description)
 
-            response["message"] = change_description
-            status = REST_HTTP_STATUS.HTTP_200_OK
+                response["message"] = change_description
+                status = REST_HTTP_STATUS.HTTP_200_OK
+                
+            else:
+                response["message"] = f"App id: {app_id} not found"
+                status = REST_HTTP_STATUS.HTTP_200_OK
 
         except Exception as e:
             response["message"] = str(e)
-            status = REST_HTTP_STATUS.HTTP_400_BAD_REQUEST
-            response["status"] = status
+            status = REST_HTTP_STATUS.HTTP_500_INTERNAL_SERVER_ERROR
 
         return JsonResponse(response, status=status)
     
