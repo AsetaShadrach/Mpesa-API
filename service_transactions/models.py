@@ -20,8 +20,12 @@ class Transaction(models.Model):
     transaction_id = models.CharField(max_length=50,primary_key=True)
     app_id = models.ForeignKey(ServiceApp, to_field="app_id" , on_delete=models.PROTECT)
     transaction_type = models.CharField(max_length=30, choices=TransactionType.choices)
-    status = models.CharField(max_length=30, choices= TransactionStatus.choices)
-    response_code = models.IntegerField(null=True)
+    # The transaction code used by the individual service to identify it's transactions
+    transaction_code = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, choices= TransactionStatus.choices, default= TransactionStatus.PENDING_INTERNAL)
+    status_code = models.IntegerField(null=True)
+    response_message = models.CharField(max_length=250, null=True)
+    response_code = models.CharField(max_length=100, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

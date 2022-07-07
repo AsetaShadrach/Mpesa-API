@@ -14,7 +14,7 @@ import rest_framework.status as REST_HTTP_STATUS
 
 class ServiceAppList(generics.ListAPIView):
     serializer_class = ServiceAppSerializer
-    def get(self, *args):
+    def get(self, request, *args):
         try:
             response  = {}
             queryset = ServiceApp.objects.all()
