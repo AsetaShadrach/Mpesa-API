@@ -1,11 +1,10 @@
 from service_transactions.models import Transaction
 from service_apps.models import ServiceApp
-from django.contrib.auth.models import User
-from decouple import config
 import uuid
 import random
 from collections import OrderedDict
 import json
+import string
 import calendar
 
 class HistoryDict(OrderedDict):
@@ -65,8 +64,11 @@ class SeedData():
                 transaction_id = uuid.uuid4(),
                 app_id = ServiceApp.objects.order_by('?').first(),
                 transaction_type = random.choice(tr_types),
+                transaction_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
                 status = random.choice(tr_status),
-                response_code = 200,
+                status_code = 200,
+                response_code = "200",
+                response_message = "successfull"
             ).save()
             
         
