@@ -35,7 +35,7 @@ class CreateTransaction():
 class MpesaExpressBackend():
     def __init__(self):
         self.pass_key = config("PASS_KEY")
-        self.short_code = config("SHORT_CODE")
+        self.short_code = int(config("SHORT_CODE"))
         self.access_token = config("ACCESS_TOKEN")
         self.account_ref = config("MPESA_EXPRESS_ACCOUNT_REF")
         self.transaction_desc = config("MPESA_EXPRESS_TRANSACTION_DESC")
@@ -46,9 +46,9 @@ class MpesaExpressBackend():
             phone_number = request_data["phone_number"]
             amount = request_data["amount"]
             callback_url = request_data["callback_url"]
-            password_parts = self.short_code+self.pass_key+self.timestamp
+            password_parts = str(self.short_code)+self.pass_key+self.timestamp
             ascii_pass = password_parts.encode("utf8")
-            self.password = base64.b64encode(ascii_pass)
+            self.password = base64.b64encode(ascii_pass).decode("utf8")
 
             payload = {
                 "BusinessShortCode": self.short_code,

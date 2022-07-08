@@ -8,5 +8,5 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class SendMoneySerializer(serializers.Serializer):
     number  = serializers.IntegerField()
-    amount  = serializers.DecimalField(max_digits=6, decimal_places=2, max_value=150000)
+    amount  = serializers.IntegerField(max_value=150000)
     callback_url = serializers.CharField()

@@ -122,10 +122,11 @@ class MpesaExpress(GenericAPIView, APIView):
             express_url = config("EXPRESS_URL")
             express_req = MpesaExpressBackend()
             mpesa_request["phone_number"] = request_data["phone_number"]
-            mpesa_request["amount"] = request_data["amount"]
+            mpesa_request["amount"] = int(request_data["amount"])
             mpesa_request["callback_url"] = request_data["callback_url"]
 
             cr_tr  = CreateTransaction()
+            #TODO Find a way to handle result == 1
             result = cr_tr.save_transaction_init(
                 request_data["app_id"],
                 request_data["transaction_code"],
@@ -135,14 +136,21 @@ class MpesaExpress(GenericAPIView, APIView):
             access_token, payload = express_req.config_request_details(mpesa_request)            
             bearer_token = 'Bearer ' + access_token
             headers = {
-            'Content-Type': 'ServiceApps/json',
+            'Content-Type': 'application/json',
             'Authorization': bearer_token
             }
-            mpesa_response = requests.post(express_url, headers=headers, json= payload).json()
+            mpesa_response = requests.post(express_url, headers=headers, json=payload).json()
 
-            response_message = mpesa_response["errorMessage"]
-            response_code = mpesa_response["errorCode"]
-            status = REST_HTTP_STATUS.HTTP_200_OK
+            response_message = mpesa_response.get('ResponseDescription') or mpesa_response.get("errorMessage") 
+            response_code =  mpesa_response.get('ResponseCode') or mpesa_response.get("errorCode")
+            # Grouping my responses into 3
+            # successes, bad request, the rest will be considered internal server errors
+            if response_code == 0:
+                status = REST_HTTP_STATUS.HTTP_200_OK
+            elif response_code[:3]=="400":
+                status = REST_HTTP_STATUS.HTTP_400_BAD_REQUEST
+            else:
+                status = REST_HTTP_STATUS.HTTP_500_INTERNAL_SERVER_ERROR
 
             response["transaction_code"] = request_data["transaction_code"]
             response["service_transaction_id"] = cr_tr.transaction.transaction_id

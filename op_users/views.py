@@ -1,5 +1,6 @@
 import requests
 import logging
+import base64
 from decouple import config
 from django.http import JsonResponse    
 from rest_framework.views import APIView
@@ -94,3 +95,22 @@ class GetAllUsers(generics.ListAPIView):
 
 class UserViewset(viewsets.ModelViewSet):
    lookup_field = 'username' #default is id
+
+
+class GetDarajaAuth(APIView):
+    def get(self, request):
+        api_auth = config("CONSUMER_KEY")+":"+config("CONSUMER_SECRET")
+        ascii_ = api_auth.encode("utf8")
+        api_auth = base64.b64encode(ascii_).decode('utf8')
+
+        headers = {
+            'Content-Type': 'ServiceApps/json',
+            'Authorization': 'Basic '+ api_auth
+            }
+        request_params = {"grant_type":"client_credentials"}
+        
+        response = requests.get(config("CREDENTIALS_URL"), headers=headers, params=request_params).json()
+
+        return JsonResponse(response)
+        
+
